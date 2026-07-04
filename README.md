@@ -1,13 +1,13 @@
 # RGC DPD PT - Módulo DPD Portugal para PrestaShop
 
-Módulo gratuito de integração **DPD Portugal** para lojas **PrestaShop 8.x**.
+Módulo gratuito de integração **DPD Portugal** para lojas **PrestaShop 8.x e 9.x**.
 
 Este módulo permite configurar serviços DPD no checkout da loja, incluindo entrega ao domicílio e entrega em pontos Pickup/Shop, e criar expedições DPD a partir da encomenda no backoffice do PrestaShop.
 
-> **Versão atual:** v1.0.1
+> **Versão atual:** v1.0.2
 > **Nome do módulo:** RGC DPD PT  
-> **Compatibilidade:** PrestaShop 8.x  
-> **Estado PrestaShop 9.x:** em validação. Pode funcionar, mas ainda requer teste funcional completo antes de ser considerado oficialmente compatível.  
+> **Compatibilidade:** PrestaShop 8.x e 9.x  
+> **PrestaShop 9.x:** testado com sucesso em ambiente de validação.  
 > **Âmbito:** Portugal Continental, Portugal Ilhas, Espanha e Internacional, conforme os serviços contratados com a DPD.
 
 ---
@@ -52,6 +52,7 @@ Sem estes dados, o módulo pode ser instalado, mas não conseguirá criar expedi
 
 - Apresenta métodos de envio DPD conforme a morada do cliente.
 - Suporta entrega ao domicílio através de serviços Home.
+- Suporta serviço **DPD Fresh**, quando contratado e validado pela DPD.
 - Suporta entrega em pontos Pickup/Shop.
 - Mostra lista e mapa de pontos Pickup quando o cliente escolhe um serviço Pickup/Shop.
 - Exige a seleção de um ponto Pickup antes da finalização da encomenda.
@@ -62,6 +63,7 @@ Sem estes dados, o módulo pode ser instalado, mas não conseguirá criar expedi
 - Permite configurar as credenciais DPD visíveis ao cliente.
 - Mantém endpoints técnicos e chaves internas protegidos da interface.
 - Permite configurar contas DPD por serviço.
+- Inclui configuração para **DPD Fresh**.
 - Separa a configuração entre serviços **Home** e **Pickup**.
 - Permite ativar a área Pickup apenas quando o cliente tem contrato DPD para esse serviço.
 - Cria e repara automaticamente as transportadoras DPD no PrestaShop.
@@ -80,6 +82,7 @@ O módulo trabalha por tipologia de serviço. Cada serviço deve ser ativado ape
 |---|---|---|
 | DPD Portugal Home | Home | Portugal Continental |
 | DPD Portugal Shop | Pickup/Shop | Portugal Continental |
+| DPD Portugal Fresh | Home/Fresh | Portugal Continental |
 | DPD Portugal Ilhas | Home | Madeira e Açores |
 | DPD Espanha Home | Home | Espanha |
 | DPD Espanha Shop | Pickup/Shop | Espanha |
@@ -94,7 +97,7 @@ Cada serviço utiliza uma **conta DPD de 8 dígitos**. As contas devem ser forne
 
 ### Loja
 
-- PrestaShop 8.x.
+- PrestaShop 8.x ou 9.x.
 - Produtos físicos.
 - Backoffice com permissão para instalar módulos.
 - Países, zonas, moradas e transportadoras corretamente configurados.
@@ -164,6 +167,7 @@ Dados necessários:
 - confirmação dos serviços contratados:
   - Portugal Home;
   - Portugal Shop/Pickup;
+  - Portugal Fresh;
   - Portugal Ilhas;
   - Espanha Home;
   - Espanha Shop/Pickup;
@@ -197,6 +201,7 @@ Dados necessários:
 Serviços pretendidos:
 - Portugal Home;
 - Portugal Shop/Pickup;
+- Portugal Fresh;
 - Portugal Ilhas;
 - Espanha Home;
 - Espanha Shop/Pickup;
@@ -247,6 +252,7 @@ Use esta secção para serviços de entrega ao domicílio.
 Exemplos:
 
 - DPD Portugal Home;
+- DPD Portugal Fresh;
 - DPD Portugal Ilhas;
 - DPD Espanha Home;
 - DPD Internacional Home.
@@ -258,6 +264,24 @@ Use esta secção apenas se o cliente tiver contrato DPD para serviços Pickup/S
 A secção Pickup tem um botão de ativação. Ao ativar, o módulo apresenta um aviso para confirmar que o serviço só deve ser configurado quando existir contrato DPD para Pickup.
 
 Quando ativado e guardado, o estado da secção Pickup fica persistente. Quando desativado e guardado, permanece desativado.
+
+#### DPD Fresh
+
+O serviço **DPD Portugal Fresh** aparece na secção **Home**, mas deve ser ativado apenas quando existir contrato DPD Fresh válido.
+
+Quando uma encomenda utiliza o serviço DPD Fresh, o módulo adiciona ao payload da API DPD os campos específicos do serviço:
+
+```json
+{
+  "fresh_pickup_date": "yyyy-mm-dd",
+  "fresh_expiration_date": "yyyy-mm-dd"
+}
+```
+
+Por defeito:
+
+- `fresh_pickup_date` é enviado como **D+1**;
+- `fresh_expiration_date` é enviado com base na validade Fresh configurada, por defeito **D+5**.
 
 ---
 
@@ -296,6 +320,7 @@ Configure os parâmetros operacionais do módulo:
 - peso máximo permitido;
 - Predict, se aplicável;
 - número de volumes por defeito;
+- validade Fresh em dias, quando aplicável;
 - formato da etiqueta;
 - ativação de logs.
 
@@ -340,6 +365,12 @@ Após qualquer alteração importante:
 
 O cliente escolhe o método DPD Home disponível para a sua morada e finaliza a compra normalmente.
 
+### Entrega DPD Fresh
+
+O cliente escolhe o método **DPD Portugal Fresh** disponível para a sua morada e finaliza a compra normalmente.
+
+Ao criar a expedição no backoffice, o módulo envia automaticamente as datas Fresh exigidas pela API DPD.
+
 ### Entrega Pickup/Shop
 
 Quando o cliente escolhe um serviço Pickup/Shop:
@@ -376,6 +407,17 @@ Depois da criação da expedição, o módulo guarda:
 - etiqueta PDF;
 - tracking no PrestaShop;
 - resposta da DPD para diagnóstico.
+
+No caso de encomendas com **DPD Portugal Fresh**, o payload enviado para a DPD inclui também:
+
+```json
+{
+  "fresh_pickup_date": "D+1",
+  "fresh_expiration_date": "D+N"
+}
+```
+
+O valor de `fresh_expiration_date` depende da validade Fresh configurada na aba **Operação**.
 
 ---
 
@@ -438,6 +480,7 @@ Verifique:
 - morada do destinatário;
 - telefone/telemóvel do destinatário;
 - ponto Pickup selecionado, no caso de Pickup/Shop;
+- validade Fresh configurada, no caso de DPD Fresh;
 - mensagem apresentada na aba **Diagnóstico**.
 
 ### A guia não aparece, mas a etiqueta foi criada
@@ -451,6 +494,10 @@ Se a API devolver a etiqueta mas não devolver a guia num campo reconhecido, o b
 ---
 
 ## Segurança
+
+Durante a instalação e ao guardar configurações, o módulo pode enviar à RGC Consulting um registo técnico simples contendo domínio da loja, versão do módulo, versão do PrestaShop, identificador da instalação e contas DPD configuradas.
+
+Não são enviados dados de clientes, encomendas, passwords, tokens OAuth ou etiquetas.
 
 Nunca publique em issues, screenshots, fóruns ou repositórios públicos:
 
@@ -510,11 +557,11 @@ Ao pedir suporte, envie:
 
 ```text
 Loja: https://exemplo.pt
-PrestaShop: 8.x
+PrestaShop: 8.x / 9.x
 PHP: 8.x
-Módulo: v1.0.1
+Módulo: v1.0.2
 Ambiente: produção
-Serviço DPD usado: Portugal Home / Portugal Shop / Ilhas / Espanha / Internacional
+Serviço DPD usado: Portugal Home / Portugal Shop / Portugal Fresh / Ilhas / Espanha / Internacional
 Erro apresentado:
 Passos para reproduzir:
 ```
