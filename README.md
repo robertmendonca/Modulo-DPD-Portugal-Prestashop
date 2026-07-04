@@ -52,7 +52,7 @@ Sem estes dados, o módulo pode ser instalado, mas não conseguirá criar expedi
 
 - Apresenta métodos de envio DPD conforme a morada do cliente.
 - Suporta entrega ao domicílio através de serviços Home.
-- Suporta serviço **DPD Fresh**, quando contratado e validado pela DPD.
+- Suporta serviço DPD Fresh, quando contratado e validado pela DPD.
 - Suporta entrega em pontos Pickup/Shop.
 - Mostra lista e mapa de pontos Pickup quando o cliente escolhe um serviço Pickup/Shop.
 - Exige a seleção de um ponto Pickup antes da finalização da encomenda.
@@ -63,7 +63,7 @@ Sem estes dados, o módulo pode ser instalado, mas não conseguirá criar expedi
 - Permite configurar as credenciais DPD visíveis ao cliente.
 - Mantém endpoints técnicos e chaves internas protegidos da interface.
 - Permite configurar contas DPD por serviço.
-- Inclui configuração para **DPD Fresh**.
+- Inclui configuração para DPD Fresh.
 - Separa a configuração entre serviços **Home** e **Pickup**.
 - Permite ativar a área Pickup apenas quando o cliente tem contrato DPD para esse serviço.
 - Cria e repara automaticamente as transportadoras DPD no PrestaShop.
@@ -271,13 +271,6 @@ O serviço **DPD Portugal Fresh** aparece na secção **Home**, mas deve ser ati
 
 Quando uma encomenda utiliza o serviço DPD Fresh, o módulo adiciona ao payload da API DPD os campos específicos do serviço:
 
-```json
-{
-  "fresh_pickup_date": "yyyy-mm-dd",
-  "fresh_expiration_date": "yyyy-mm-dd"
-}
-```
-
 Por defeito:
 
 - `fresh_pickup_date` é enviado como **D+1**;
@@ -407,17 +400,6 @@ Depois da criação da expedição, o módulo guarda:
 - etiqueta PDF;
 - tracking no PrestaShop;
 - resposta da DPD para diagnóstico.
-
-No caso de encomendas com **DPD Portugal Fresh**, o payload enviado para a DPD inclui também:
-
-```json
-{
-  "fresh_pickup_date": "D+1",
-  "fresh_expiration_date": "D+N"
-}
-```
-
-O valor de `fresh_expiration_date` depende da validade Fresh configurada na aba **Operação**.
 
 ---
 
