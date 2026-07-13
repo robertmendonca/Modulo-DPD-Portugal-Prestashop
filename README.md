@@ -4,8 +4,7 @@ Módulo gratuito de integração **DPD Portugal** para lojas **PrestaShop 8.x e 
 
 Este módulo permite configurar serviços DPD no checkout da loja, incluindo entrega ao domicílio e entrega em pontos Pickup/Shop, e criar expedições DPD a partir da encomenda no backoffice do PrestaShop.
 
-> **Versão atual:** v1.0.4  
-
+> **Versão atual:** v1.0.5  
 > **Nome do módulo:** RGC DPD PT  
 > **Compatibilidade:** PrestaShop 8.x e 9.x  
 > **PrestaShop 9.x:** testado com sucesso em ambiente de validação.  
@@ -542,7 +541,7 @@ Ao pedir suporte, envie:
 Loja: https://exemplo.pt
 PrestaShop: 8.x / 9.x
 PHP: 8.x
-Módulo: v1.0.4
+Módulo: v1.0.5
 Ambiente: produção
 Serviço DPD usado: Portugal Home / Portugal Shop / Portugal Fresh / Ilhas / Espanha / Internacional
 Erro apresentado:
